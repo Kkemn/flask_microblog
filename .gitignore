@@ -1,0 +1,46 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+ENV/
+.venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# ---- Flask ----
+config.py
+*.log
+
+# ---- SQLite ----
+*.db
+*.sqlite3
+*.sqlite
+
+# ---- IDEs / Editors ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- OS-specific ----
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ---- Misc ----
+# Local environment files
+.env
+.flaskenv
+*.bak
+*.tmp
