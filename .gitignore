@@ -13,7 +13,6 @@ dist/
 build/
 
 # ---- Flask ----
-config.py
 *.log
 
 # ---- SQLite ----
@@ -41,6 +40,5 @@ $RECYCLE.BIN/
 # ---- Misc ----
 # Local environment files
 .env
-.flaskenv
 *.bak
 *.tmp
