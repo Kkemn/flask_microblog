@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from hashlib import md5
 from typing import Optional
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlalchemy as sa
@@ -13,12 +14,18 @@ class User(UserMixin, db.Model):
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256)) # type: ignore
     posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
+    about_me: so.Mapped[Optional[str]] = so.mapped_column(sa.String(140))
+    last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(default=lambda: datetime.now(timezone.utc))
 
-    def set_password(self, password) -> None:
+    def set_password(self, password: str) -> None:
         self.password_hash: str = generate_password_hash(password)
 
-    def check_password(self, password) -> bool:
+    def check_password(self, password: str) -> bool:
         return check_password_hash(self.password_hash, password)
+    
+    def avatar(self, size: str | int) -> str:
+        digest: str = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
 
     def __repr__(self) -> str:
         return f'<User {self.username}>'
