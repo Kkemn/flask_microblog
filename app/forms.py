@@ -19,16 +19,27 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
-        user = db.session.scalar(sa.select(User).where(User.username == username.data))
+        user: User | None = db.session.scalar(sa.select(User).where(User.username == username.data))
         if user is not None:
             raise ValidationError('Username already taken. Please use a different username.')
         
     def validate_email(self, email):
-        email = db.session.scalar(sa.select(User).where(User.email == email.data))
-        if email is not None:
+        user: User | None = db.session.scalar(sa.select(User).where(User.email == email.data))
+        if user is not None:
             raise ValidationError('Email already taken. Please use a different email address.')
         
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
     submit = SubmitField('Submit')
+
+    def __init__(self, original_username, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.original_username: str = original_username
+
+    def validate_username(self, username):
+        if username.data != self.original_username:
+            user: User | None = db.session.scalar(sa.select(User).where(User.username == username.data))
+            if user is not None:
+                raise ValidationError('Username already taken. Please use a different username.')
+            
